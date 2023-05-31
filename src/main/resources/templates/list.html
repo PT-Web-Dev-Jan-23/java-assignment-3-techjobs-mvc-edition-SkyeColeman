@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org/">
-    <head th:replace="fragments :: head"></head>
-
+<head>
+</head>
     <body>
 
         <div th:replace="fragments :: page-header"></div>
@@ -9,6 +9,12 @@
         <div class="container body-content">
             <h1 th:text="${#strings.capitalizeWords(title)}"></h1>
             <h2 class = "centered">View Jobs By Category</h2>
+            <div>
+                <input type = "text" id = "taskInput" placeholder = "Enter a task">
+                <button onclick = "addTask()">Add Task</button>
+            </div>
+            <ul id="taskList"></ul>
+
         </div>
 
         <table class="centeredTable">
@@ -20,8 +26,6 @@
             <tr>
                 <!-- TODO #2: Complete the View Jobs By Category Table. -->
 
-                <td></td> <!-- Feel free to remove or modify this element if necessary. -->
-
                 <td th:each="category : ${tableChoices}">
                     <ul>
                         <li th:each="item : ${category.value}">
@@ -32,5 +36,20 @@
             </tr>
         </table>
 
+    <script>
+         function addTask() {
+                var taskInput = document.getElementById("taskInput");
+                var taskList = document.getElementById("taskList");
+
+                if (taskInput.value !== "") {
+                    var taskItem = document.createElement("li");
+                    var taskLink = document.createElement("a");
+                    taskLink.innerText = taskInput.value;
+                    taskItem.appendChild(taskLink);
+                    taskList.appendChild(taskItem);
+                    taskInput.value = "";
+                }
+            }
+    </script>
     </body>
 </html>

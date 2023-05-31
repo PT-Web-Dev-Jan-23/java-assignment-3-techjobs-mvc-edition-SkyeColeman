@@ -37,7 +37,23 @@
     <hr />
 
     <!-- TODO #4 - Loop over the search results to display all job fields. -->
+<table class="centeredTable">
+    <tr>
+        <th>ID</th>
+        <th>Employer</th>
+        <th>Location</th>
+        <th>Position Type</th>
+        <th>Skill</th>
 
+    </tr>
+    <tr th:each = "job : ${searchResults}">
+        <td th:text = "${job.get('id')}" ></td>
+        <td th:text = "${job.get('employer')}" ></td>
+        <td th:text = "${job.get('location')}"></td>
+        <td th:text = "${job.get('positionType')}"></td>
+        <td th:text = "${job.get('skill')}"></td>
+    </tr>
+</table>
 </div>
 
 </body>
