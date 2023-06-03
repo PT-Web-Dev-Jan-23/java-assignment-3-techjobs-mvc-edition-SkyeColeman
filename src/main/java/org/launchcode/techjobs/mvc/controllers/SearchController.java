@@ -27,6 +27,7 @@ public class SearchController {
 
     public SearchController() {
         columnChoices.put("all", "All");
+        columnChoices.put("name", "Name");
         columnChoices.put("employer", "Employer");
         columnChoices.put("location", "Location");
         columnChoices.put("positionType", "Position Type");
@@ -43,45 +44,37 @@ public class SearchController {
 
     // TODO: Impliment the search logic based on the searchTerm and its parameters.
 
-    @PostMapping(value = "results")
-    public String processSearch(Model model, @RequestParam String searchTerm, @RequestParam String searchType) {
-        List<HashMap<String, String>> searchResults = new ArrayList<>();
-
-        for (Job job : jobs) {
-            if ("all".equals(searchType) || jobFieldContainsSearchTerm(job, searchType, searchTerm)) {
-                HashMap<String, String> jobMap = new HashMap<>();
-                jobMap.put("id", "job-" + idCounter);
-                jobMap.put("employer", job.getEmployer().getValue());
-                jobMap.put("location", job.getLocation().getValue());
-                jobMap.put("positionType", job.getPositionType().getValue());
-                jobMap.put("coreCompetency", job.getCoreCompetency().getValue());
-                searchResults.add(jobMap);
-                idCounter++;
-            }
+    @PostMapping(value = "/results")
+    public String displaySearchResults(Model model, @RequestParam String searchTerm, @RequestParam String searchType) {
+        List<Job> searchResults;
+        if ("all".equals(searchType) || searchTerm.isEmpty()) {
+            searchResults = JobData.findAll();
+        } else {
+            searchResults = JobData.findByColumnAndValue(searchType, searchTerm);
         }
+        List<HashMap<String, String>> formattedResults = formatSearchResults(searchResults);
 
-
-        //Add the search results to the model to be accessed in the view
-        model.addAttribute("searchResults", searchResults);
+        model.addAttribute("searchResults", formattedResults);
         model.addAttribute("columns", columnChoices);
-        model.addAttribute("searchTerm", searchTerm);
-        model.addAttribute("searchType", searchType);
-
+        idCounter = 1;
         return "search";
     }
 
-    private boolean jobFieldContainsSearchTerm(Job job, String searchType, String searchTerm) {
-        switch (searchType) {
-            case "employer":
-                return job.getEmployer().getValue().toLowerCase().contains(searchTerm.toLowerCase());
-            case "location":
-                return job.getLocation().getValue().toLowerCase().contains(searchTerm.toLowerCase());
-            case "positionType":
-                return job.getPositionType().getValue().toLowerCase().contains(searchTerm.toLowerCase());
-            case "coreCompetency":
-                return job.getCoreCompetency().getValue().toLowerCase().contains(searchTerm.toLowerCase());
-            default:
-                return false;
+    private List<HashMap<String, String>> formatSearchResults(List<Job> searchResults) {
+        List<HashMap<String, String>> formattedResults = new ArrayList<>();
+
+        for (Job job : searchResults) {
+            HashMap<String, String> jobMap = new HashMap<>();
+            jobMap.put("id", String.valueOf(idCounter));
+            jobMap.put("name", job.getName());
+            jobMap.put("employer", job.getEmployer().getValue());
+            jobMap.put("location", job.getLocation().getValue());
+            jobMap.put("positionType", job.getPositionType().getValue());
+            jobMap.put("coreCompetency", job.getCoreCompetency().getValue());
+            formattedResults.add(jobMap);
+            idCounter++;
         }
+
+        return formattedResults;
     }
 }

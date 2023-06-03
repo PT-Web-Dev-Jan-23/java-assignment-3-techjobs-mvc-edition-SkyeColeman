@@ -37,24 +37,35 @@
     <hr />
 
     <!-- TODO #4 - Loop over the search results to display all job fields. -->
-<table class="centeredTable">
-    <tr>
-        <th>ID</th>
-        <th>Employer</th>
-        <th>Location</th>
-        <th>Position Type</th>
-        <th>Skill</th>
-
-    </tr>
-    <tr th:each = "job : ${searchResults}">
-        <td th:text = "${job.get('id')}" ></td>
-        <td th:text = "${job.get('employer')}" ></td>
-        <td th:text = "${job.get('location')}"></td>
-        <td th:text = "${job.get('positionType')}"></td>
-        <td th:text = "${job.get('skill')}"></td>
+    <div th:each="job : ${searchResults}">
+        <table class="job-listing">
+            <tr>
+                <td>ID</td>
+                <td th:text="${job['id']}"></td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td th:text="${job['name']}"></td>
+            </tr>
+            <tr>
+                <td>Employer</td>
+                <td th:text="${job['employer']}"></td>
+            </tr>
+            <tr>
+                <td>Location</td>
+                <td th:text="${job['location']}"></td>
+            </tr>
+            <tr>
+                <td>Position Type</td>
+                <td th:text="${job['positionType']}"></td>
+            </tr>
+            <tr>
+                <td>Skill</td>
+                <td th:text="${job['coreCompetency']}"></td>
+            </tr>
     </tr>
 </table>
 </div>
-
+</div>
 </body>
 </html>
